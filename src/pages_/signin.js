@@ -1,6 +1,7 @@
 import { Formik } from "formik";
 import { connect } from "react-redux";
 import Router from "next/router";
+import { useQuery, gql } from "@apollo/client";
 
 // components
 
@@ -128,5 +129,23 @@ function Signin(props) {
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser
 });
+
+const mapMutationsToProps = ({ ownProps, state }) => {
+  return {
+    category: {
+      query: gql`
+          query getCategory($categoryId: Int!) {
+              category(id: $categoryId) {
+                  name
+                  color
+              }
+          }
+      `,
+      variables: {
+        categoryId: 5,
+      },
+    },
+  };
+};
 
 export default connect(mapStateToProps, { loginRequest })(Signin);

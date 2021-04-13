@@ -1,5 +1,7 @@
 import Head from "next/head";
 import wrapper from "../store/index";
+import { ApolloProvider } from "@apollo/client";
+import client from "../apollo-client";
 
 import '../styles/globals.css'
 
@@ -13,7 +15,9 @@ function App({ Component, pageProps }) {
           <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Component {...pageProps} />
+      <ApolloProvider client={client}>
+        <Component {...pageProps} />
+      </ApolloProvider>
     </>
   )
 }
