@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { connect } from "react-redux";
 import _ from "lodash";
 import { useRouter } from "next/router";
 import useTranslation from 'next-translate/useTranslation'
+import cookies from "js-cookie";
+import { useQuery } from "@apollo/client";
+import client from "../../apollo-client"
 
 import {
   AppBar,
@@ -19,12 +21,7 @@ import {
   Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import Router from "next/router";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
-// Actions
-
-import { logoutRequest } from "../../store/actions/authActions";
 
 // urls
 
@@ -32,17 +29,22 @@ import { SIGNIN_PAGE } from "../../config/url";
 
 // config
 
-import { MENU_PAGES } from "../../config/config";
+import { MENU_PAGES, TOKEN_NAME } from "../../config/config";
 
 // styles
 
 import styles from "./PageLayout.module.scss";
 
+//Queries
+
+import { GET_CURRENT_USER_QUERY } from "../../../operations/queries";
+
 
 const PageLayout = (props) => {
 
-  const { children, currentUser, logoutRequest } = props;
+  const { children } = props;
 
+  const { data } = useQuery(GET_CURRENT_USER_QUERY);
   const router = useRouter();
   const { t } = useTranslation('common');
 
@@ -66,7 +68,7 @@ const PageLayout = (props) => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" className={styles.title}>
-              {!_.isEmpty(currentUser) && `${currentUser.name} ${currentUser.lastName}`}
+              {!_.isEmpty(data) && data.currentUser.email}
             </Typography>
             <Button
                 aria-controls="simple-menu"
@@ -85,6 +87,7 @@ const PageLayout = (props) => {
             >
               {router.locales.map(locale => (
                 <MenuItem
+                  key={locale}
                   onClick={() => {
                     router.push(router.pathname, router.pathname, { locale });
                     handleCloseLocales();
@@ -117,7 +120,7 @@ const PageLayout = (props) => {
                   root: styles.listItem
                 }}
                 onClick={() => {
-                  Router.push(link);
+                  router.push(link);
                   onToggleSideBar();
                 }}
               >
@@ -134,8 +137,9 @@ const PageLayout = (props) => {
                 root: styles.listItem
               }}
               onClick={() => {
-                Router.push(SIGNIN_PAGE);
-                logoutRequest();
+                router.push(SIGNIN_PAGE);
+                cookies.remove(TOKEN_NAME);
+                client.cache.reset()
               }}
           >
             <ListItemIcon classes={{ root: styles.listItemIcon }}>
@@ -150,8 +154,5 @@ const PageLayout = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
-});
 
-export default connect(mapStateToProps, { logoutRequest })(PageLayout);
+export default PageLayout;

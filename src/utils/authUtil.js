@@ -1,15 +1,12 @@
 import getCookies from "next-cookies";
-import _ from "lodash";
-
-import { FREE_PAGES, HOME_PAGE, SIGNIN_PAGE } from "../config/url";
-import wrapper from "../store";
-import actionHelper from "./actionHelper";
-import { LOGIN } from "../store/actions/authActions";
-import { TOKEN_NAME } from "../config/config";
-import { gql } from "@apollo/client/core";
 import client from "../apollo-client";
 
-const authUtil = wrapper.getServerSideProps(async (ctx, props = {}) => {
+
+import { FREE_PAGES, HOME_PAGE, SIGNIN_PAGE } from "../config/url";
+import { TOKEN_NAME } from "../config/config";
+import { GET_CURRENT_USER_QUERY } from "../../operations/queries";
+
+const authUtil = async (ctx, props = {}) => {
   const authorization = getCookies(ctx)[TOKEN_NAME];
 
   const redirect = {
@@ -23,27 +20,15 @@ const authUtil = wrapper.getServerSideProps(async (ctx, props = {}) => {
 
   if (!authorization && !isFreePage) return redirect;
 
-  if (_.isEmpty(ctx.store.getState().user.currentUser) && authorization) {
-
+  if (authorization) {
     try {
 
       const { data } = await client.query({
-        query: gql`
-            query currentUser {
-                currentUser {
-                    id,
-                    email
-                }
-            }
-        `,
+        query: GET_CURRENT_USER_QUERY,
         context: {
-          headers: {
-            Authorization: `Bearer ${authorization}`
-          }
+          headers: { authorization }
         },
       });
-
-      ctx.store.dispatch({ type: actionHelper(LOGIN, true), payload: data.currentUser });
 
       if (isFreePage) {
         return {
@@ -61,6 +46,6 @@ const authUtil = wrapper.getServerSideProps(async (ctx, props = {}) => {
   }
 
   return { props };
-});
+};
 
 export default authUtil;

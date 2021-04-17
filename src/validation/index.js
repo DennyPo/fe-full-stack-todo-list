@@ -30,4 +30,4 @@ export const errorMessages = {
 
 export const emailPattern = "^([a-z0-9_+-]+\\.)*[a-z0-9_+-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
 
-export const passwordPattern = "[a-zA-Z0-9\\W]{8,}";
+export const passwordPattern = "[a-zA-Z0-9\\W]{5,}";

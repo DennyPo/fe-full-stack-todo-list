@@ -1,5 +1,4 @@
 import Head from "next/head";
-import wrapper from "../store/index";
 import { ApolloProvider } from "@apollo/client";
 import client from "../apollo-client";
 
@@ -22,4 +21,4 @@ function App({ Component, pageProps }) {
   )
 }
 
-export default wrapper.withRedux(App)
+export default App;

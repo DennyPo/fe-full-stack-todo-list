@@ -1,7 +1,8 @@
-import { Formik } from "formik";
-import { connect } from "react-redux";
-import Router from "next/router";
-import { useQuery, gql } from "@apollo/client";
+import { useFormik } from "formik";
+import { useEffect } from "react";
+import Router  from "next/router";
+import { useLazyQuery } from "@apollo/client";
+import cookies from "js-cookie";
 
 // components
 
@@ -14,6 +15,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import { CircularProgress } from "@material-ui/core";
 
 // styles
 
@@ -23,10 +25,6 @@ import styles from "../styles/Signin.module.scss";
 
 import { validate } from "../validation/signin"
 
-// actions
-
-import { loginRequest } from "../store/actions/authActions";
-
 // utils
 
 import authUtil from "../utils/authUtil";
@@ -34,14 +32,56 @@ import authUtil from "../utils/authUtil";
 // config
 
 import { HOME_PAGE } from "../config/url";
+import { TOKEN_NAME } from "../config/config";
+
+// Queries
+
+import { LOG_IN_QUERY } from "../../operations/queries";
 
 export const getServerSideProps = async ctx => authUtil(ctx);
 
+
 function Signin(props) {
 
+  const [signIn, { loading, error }] = useLazyQuery(LOG_IN_QUERY, {
+    onCompleted: ({ login }) => {
+      cookies.set(TOKEN_NAME, login.accessToken);
+
+      Router.push(HOME_PAGE);
+    },
+  });
+
   const submitHandler = values => {
-    props.loginRequest(values, () => Router.push(HOME_PAGE));
+
+    signIn({
+      variables: { loginUserInput: values },
+    });
   }
+
+  const {
+    values,
+    errors,
+    handleSubmit,
+    handleChange,
+    setErrors
+  } = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate,
+    onSubmit: submitHandler,
+    validateOnChange: false
+  });
+
+  useEffect(() => {
+    if (error) {
+      setErrors({
+        email: error.message,
+        password: error.message
+      })
+    }
+  }, [error]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -53,99 +93,60 @@ function Signin(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Formik
-          initialValues={{
-            email: "",
-            password: "",
-            remember: false
-          }}
-          onSubmit={submitHandler}
-          validate={validate}
-          validateOnChange={false}
-        >
-          {({
-              values,
-              errors,
-              handleSubmit,
-              handleChange
-          }) => (
-            <form className={styles.form} onSubmit={handleSubmit}>
-              <TextField
-                  value={values.email}
-                  onChange={handleChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-              />
-              <TextField
-                  value={values.password}
-                  onChange={handleChange}
-                  error={!!errors.password}
-                  helperText={errors.password}
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-              />
-              <FormControlLabel
-                  control={
-                    <Checkbox
-                        checked={values.remember}
-                        onChange={handleChange}
-                        name="remember"
-                        color="primary"
-                    />
-                  }
-                  label="Remember me"
-              />
-              <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={styles.submit}
-              >
-                Sign In
-              </Button>
-            </form>
-          )}
-        </Formik>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <TextField
+              value={values.email}
+              onChange={handleChange}
+              error={!!errors.email}
+              helperText={errors.email}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+          />
+          <TextField
+              value={values.password}
+              onChange={handleChange}
+              error={!!errors.password}
+              helperText={errors.password}
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+          />
+          {/*<FormControlLabel*/}
+          {/*    control={*/}
+          {/*      <Checkbox*/}
+          {/*          checked={values.remember}*/}
+          {/*          onChange={handleChange}*/}
+          {/*          name="remember"*/}
+          {/*          color="primary"*/}
+          {/*      />*/}
+          {/*    }*/}
+          {/*    label="Remember me"*/}
+          {/*/>*/}
+          <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={styles.submit}
+              startIcon={loading && <CircularProgress color="secondary" size={20} />}
+          >
+            Sign In
+          </Button>
+        </form>
       </div>
     </Container>
   );
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
-});
-
-const mapMutationsToProps = ({ ownProps, state }) => {
-  return {
-    category: {
-      query: gql`
-          query getCategory($categoryId: Int!) {
-              category(id: $categoryId) {
-                  name
-                  color
-              }
-          }
-      `,
-      variables: {
-        categoryId: 5,
-      },
-    },
-  };
-};
-
-export default connect(mapStateToProps, { loginRequest })(Signin);
+export default Signin;
