@@ -1,5 +1,5 @@
 import getCookies from "next-cookies";
-import client from "../apollo-client";
+import { initializeApollo } from "../apollo-client";
 
 
 import { FREE_PAGES, HOME_PAGE, SIGNIN_PAGE } from "../config/url";
@@ -7,6 +7,7 @@ import { TOKEN_NAME } from "../config/config";
 import { GET_CURRENT_USER_QUERY } from "../../operations/queries";
 
 const authUtil = async (ctx, props = {}) => {
+  const client = initializeApollo();
   const authorization = getCookies(ctx)[TOKEN_NAME];
 
   const redirect = {
@@ -23,7 +24,7 @@ const authUtil = async (ctx, props = {}) => {
   if (authorization) {
     try {
 
-      const { data } = await client.query({
+      await client.query({
         query: GET_CURRENT_USER_QUERY,
         context: {
           headers: { authorization }
@@ -45,7 +46,11 @@ const authUtil = async (ctx, props = {}) => {
     }
   }
 
-  return { props };
+  return {
+    props: {
+      initialApolloState: client.cache.extract(),
+    },
+  };
 };
 
 export default authUtil;

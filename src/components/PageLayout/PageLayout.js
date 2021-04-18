@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import useTranslation from 'next-translate/useTranslation'
 import cookies from "js-cookie";
 import { useQuery } from "@apollo/client";
-import client from "../../apollo-client"
 
 import {
   AppBar,
@@ -44,7 +43,7 @@ const PageLayout = (props) => {
 
   const { children } = props;
 
-  const { data } = useQuery(GET_CURRENT_USER_QUERY);
+  const { client, data } = useQuery(GET_CURRENT_USER_QUERY);
   const router = useRouter();
   const { t } = useTranslation('common');
 
@@ -139,7 +138,7 @@ const PageLayout = (props) => {
               onClick={() => {
                 router.push(SIGNIN_PAGE);
                 cookies.remove(TOKEN_NAME);
-                client.cache.reset()
+                client.cache.reset();
               }}
           >
             <ListItemIcon classes={{ root: styles.listItemIcon }}>
