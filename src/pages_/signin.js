@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import Router  from "next/router";
 import { useLazyQuery } from "@apollo/client";
-import cookies from "js-cookie";
 
 // components
 
@@ -28,11 +27,12 @@ import { validate } from "../validation/signin"
 // utils
 
 import authUtil from "../utils/authUtil";
+import { setCookie } from "../utils/cookiesUtils";
 
 // config
 
 import { HOME_PAGE } from "../config/url";
-import { TOKEN_NAME } from "../config/config";
+import { REFRESH_TOKEN_NAME, TOKEN_NAME } from "../config/config";
 
 // Queries
 
@@ -45,7 +45,8 @@ function Signin(props) {
 
   const [signIn, { loading, error }] = useLazyQuery(LOG_IN_QUERY, {
     onCompleted: ({ login }) => {
-      cookies.set(TOKEN_NAME, login.accessToken);
+      setCookie(TOKEN_NAME, login.accessToken);
+      setCookie(REFRESH_TOKEN_NAME, login.refreshToken);
 
       Router.push(HOME_PAGE);
     },

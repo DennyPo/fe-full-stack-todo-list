@@ -2,7 +2,6 @@ import { useState } from "react";
 import _ from "lodash";
 import { useRouter } from "next/router";
 import useTranslation from 'next-translate/useTranslation'
-import cookies from "js-cookie";
 import { useQuery } from "@apollo/client";
 
 import {
@@ -28,7 +27,7 @@ import { SIGNIN_PAGE } from "../../config/url";
 
 // config
 
-import { MENU_PAGES, TOKEN_NAME } from "../../config/config";
+import { MENU_PAGES, REFRESH_TOKEN_NAME, TOKEN_NAME } from "../../config/config";
 
 // styles
 
@@ -37,6 +36,10 @@ import styles from "./PageLayout.module.scss";
 //Queries
 
 import { GET_CURRENT_USER_QUERY } from "../../../operations/queries";
+
+// Utils
+
+import { removeCookie } from "../../utils/cookiesUtils";
 
 
 const PageLayout = (props) => {
@@ -136,8 +139,10 @@ const PageLayout = (props) => {
                 root: styles.listItem
               }}
               onClick={() => {
+                removeCookie(TOKEN_NAME);
+                removeCookie(REFRESH_TOKEN_NAME);
+
                 router.push(SIGNIN_PAGE);
-                cookies.remove(TOKEN_NAME);
                 client.cache.reset();
               }}
           >

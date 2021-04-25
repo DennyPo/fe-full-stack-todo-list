@@ -2,8 +2,8 @@ import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { useMemo } from "react";
 import { setContext } from '@apollo/client/link/context';
 import { API } from "./config/url";
-import cookies from "js-cookie";
 import { TOKEN_NAME } from "./config/config";
+import { getCookie } from "./utils/cookiesUtils";
 
 
 const httpLink = createHttpLink({
@@ -14,7 +14,7 @@ const authLink = setContext((_, { headers }) => {
 
   let authorization;
   if (process.browser) {
-    authorization = cookies.get(TOKEN_NAME);
+    authorization = getCookie(TOKEN_NAME);
   } else {
     authorization = headers?.authorization
   }

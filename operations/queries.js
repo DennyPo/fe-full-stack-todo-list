@@ -17,3 +17,11 @@ export const GET_CURRENT_USER_QUERY = gql`
         }
     }
 `;
+
+export const GET_NEW_ACCESS_TOKEN_QUERY = gql`
+    query refreshToken($refreshToken: String!) {
+        refreshToken(refreshToken: $refreshToken) {
+            accessToken
+        }
+    }
+`;
