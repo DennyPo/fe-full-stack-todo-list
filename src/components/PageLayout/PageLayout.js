@@ -70,7 +70,7 @@ const PageLayout = (props) => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" className={styles.title}>
-              {!_.isEmpty(data) && data.currentUser.email}
+              {!_.isEmpty(data) && data.currentUser.name}
             </Typography>
             <Button
                 aria-controls="simple-menu"

@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import Router  from "next/router";
 import { useLazyQuery } from "@apollo/client";
+import Link from 'next/link';
 
 // components
 
@@ -41,18 +42,11 @@ import { LOG_IN_QUERY } from "../../operations/queries";
 export const getServerSideProps = async ctx => authUtil(ctx);
 
 
-function Signin(props) {
+function SignIn(props) {
 
-  const [signIn, { loading, error }] = useLazyQuery(LOG_IN_QUERY, {
-    onCompleted: ({ login }) => {
-      setCookie(TOKEN_NAME, login.accessToken);
-      setCookie(REFRESH_TOKEN_NAME, login.refreshToken);
+  const [signIn, { loading, error, data }] = useLazyQuery(LOG_IN_QUERY);
 
-      Router.push(HOME_PAGE);
-    },
-  });
-
-  const submitHandler = values => {
+  const submitHandler = ({ remember, ...values }) => {
 
     signIn({
       variables: { loginUserInput: values },
@@ -69,11 +63,24 @@ function Signin(props) {
     initialValues: {
       email: "",
       password: "",
+      remember: false
     },
     validate,
     onSubmit: submitHandler,
     validateOnChange: false
   });
+
+  useEffect(() => {
+    if (data) {
+      setCookie(TOKEN_NAME, data.login.accessToken);
+
+      if (values.remember) {
+        setCookie(REFRESH_TOKEN_NAME, data.login.refreshToken);
+      }
+
+      Router.push(HOME_PAGE);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (error) {
@@ -123,17 +130,17 @@ function Signin(props) {
               id="password"
               autoComplete="current-password"
           />
-          {/*<FormControlLabel*/}
-          {/*    control={*/}
-          {/*      <Checkbox*/}
-          {/*          checked={values.remember}*/}
-          {/*          onChange={handleChange}*/}
-          {/*          name="remember"*/}
-          {/*          color="primary"*/}
-          {/*      />*/}
-          {/*    }*/}
-          {/*    label="Remember me"*/}
-          {/*/>*/}
+          <FormControlLabel
+            control={
+              <Checkbox
+                  checked={values.remember}
+                  onChange={handleChange}
+                  name="remember"
+                  color="primary"
+              />
+            }
+            label="Remember me"
+          />
           <Button
               type="submit"
               fullWidth
@@ -145,9 +152,12 @@ function Signin(props) {
             Sign In
           </Button>
         </form>
+        <Typography className={styles.register} component="p" variant="subtitle1">
+          Don`t have an account? You can <Link href="/sign-up"><a>register</a></Link>.
+        </Typography>
       </div>
     </Container>
   );
 }
 
-export default Signin;
+export default SignIn;

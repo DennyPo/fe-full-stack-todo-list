@@ -25,9 +25,11 @@ export const errorMessages = {
   emptyEmail: "Please, enter your email address",
   notValidEmail: "Please, enter a valid email address",
   emptyPassword: "Please, enter your password",
-  minLengthPassword: "Minimum length of password, 8 or more characters"
+  minLengthPassword: "Minimum length of password, 5 or more characters"
 };
 
 export const emailPattern = "^([a-z0-9_+-]+\\.)*[a-z0-9_+-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
 
 export const passwordPattern = "[a-zA-Z0-9\\W]{5,}";
+
+export const namePattern = "[a-zA-Z]{2,}";
