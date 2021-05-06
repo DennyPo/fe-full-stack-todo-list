@@ -46,7 +46,7 @@ const authUtil = async (ctx, props = {}) => {
       await client.query({
         query: GET_CURRENT_USER_QUERY,
         context: {
-          headers: { authorization: token }
+          headers: { Authorization: token }
         },
       });
 

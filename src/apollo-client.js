@@ -16,13 +16,13 @@ const authLink = setContext((_, { headers }) => {
   if (process.browser) {
     authorization = getCookie(TOKEN_NAME);
   } else {
-    authorization = headers?.authorization
+    authorization = headers?.Authorization
   }
 
   return {
     headers: {
       ...headers,
-      ...(authorization && { authorization: `Bearer ${authorization}` })
+      ...(authorization && { Authorization: `Bearer ${authorization}` })
     }
   }
 });

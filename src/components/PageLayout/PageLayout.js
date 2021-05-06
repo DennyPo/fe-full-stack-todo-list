@@ -16,7 +16,8 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Typography
+  Typography,
+  Container
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -153,7 +154,9 @@ const PageLayout = (props) => {
           </ListItem>
         </Drawer>
 
-        {children}
+        <Container maxWidth="sm" classes={{ root: styles.container }}>
+          {children}
+        </Container>
       </>
   );
 };
