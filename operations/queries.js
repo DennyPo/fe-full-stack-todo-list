@@ -26,3 +26,14 @@ export const GET_NEW_ACCESS_TOKEN_QUERY = gql`
         }
     }
 `;
+
+export const GET_CURRENT_USER_TODOS = gql`
+    query getCurrentUserTodos {
+        findAllCurrentUserTodos {
+            id,
+            userId,
+            title,
+            description
+        }
+    }
+`;

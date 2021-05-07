@@ -1,4 +1,5 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { useEffect } from "react";
 
 // Utils
 
@@ -8,16 +9,24 @@ import authUtil from "../utils/authUtil";
 
 import PageLayout from "../components/PageLayout/PageLayout";
 import TodoForm from "../components/TodoForm/TodoForm";
+import PaginationList from "../components/PaginationList/PaginationList";
 
-// Mutations
+// Operations
 
 import { CREATE_TODO_MUTATION } from "../../operations/mutations";
+import { GET_CURRENT_USER_TODOS } from "../../operations/queries";
 
 export const getServerSideProps = async ctx => authUtil(ctx);
 
 function Home(props) {
 
-  const [createTodo, { loading }] = useMutation(CREATE_TODO_MUTATION);
+  const [createTodo, { loading, data: createdTodo }] = useMutation(CREATE_TODO_MUTATION);
+  const [getTodos, { data }] = useLazyQuery(GET_CURRENT_USER_TODOS, { fetchPolicy: "network-only" });
+
+  useEffect(() => {
+    getTodos();
+  }, [createdTodo]);
+
 
   const onSubmit = async (values, { setValues }) => {
 
@@ -31,11 +40,12 @@ function Home(props) {
         description: ""
       });
     }
-  }
+  };
 
   return (
     <PageLayout>
       <TodoForm onSubmit={onSubmit} loading={loading} />
+      <PaginationList list={data?.findAllCurrentUserTodos} />
     </PageLayout>
   )
 }
