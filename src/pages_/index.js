@@ -1,5 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 // Utils
 
@@ -23,8 +24,22 @@ function Home(props) {
   const [createTodo, { loading, data: createdTodo }] = useMutation(CREATE_TODO_MUTATION);
   const [getTodos, { data }] = useLazyQuery(GET_CURRENT_USER_TODOS, { fetchPolicy: "network-only" });
 
+  const router = useRouter();
+
   useEffect(() => {
-    getTodos();
+      getTodos({
+        variables: {
+          pagination: {
+            take: parseInt(router.query.perPage, 10),
+          }
+        }
+      });
+
+    if (createdTodo) {
+      const path = `${router.pathname}?page=1&perPage=${router.query.perPage}`;
+
+      router.push(path, path, { shallow: true });
+    }
   }, [createdTodo]);
 
 
@@ -45,7 +60,10 @@ function Home(props) {
   return (
     <PageLayout>
       <TodoForm onSubmit={onSubmit} loading={loading} />
-      <PaginationList list={data?.findAllCurrentUserTodos} />
+      <PaginationList
+        data={data?.findAllCurrentUserTodos}
+        request={getTodos}
+      />
     </PageLayout>
   )
 }

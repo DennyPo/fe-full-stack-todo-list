@@ -60,7 +60,7 @@ const PageLayout = (props) => {
 
   return (
       <>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <IconButton
                 edge="start"
@@ -92,7 +92,7 @@ const PageLayout = (props) => {
                 <MenuItem
                   key={locale}
                   onClick={() => {
-                    router.push(router.pathname, router.pathname, { locale });
+                    router.push(router.asPath, router.asPath, { locale });
                     handleCloseLocales();
                   }}
                 >
