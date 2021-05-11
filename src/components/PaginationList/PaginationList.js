@@ -1,8 +1,15 @@
-import { IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, MenuItem, Select } from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import Pagination from '@material-ui/lab/Pagination';
 import { useRouter } from "next/router";
+
+// Components
+
+import {
+  Grid,
+  List,
+  MenuItem,
+  Select
+} from "@material-ui/core";
+import Pagination from '@material-ui/lab/Pagination';
+import PaginationListItem from "../PaginationListItem/PaginationListItem";
 
 
 const PaginationList = props => {
@@ -12,7 +19,8 @@ const PaginationList = props => {
       list = [],
       count = 0
     } = {},
-    request
+    onRequest,
+    onDelete
   } = props;
 
   const router = useRouter();
@@ -24,7 +32,7 @@ const PaginationList = props => {
 
   const onPageChange = (e, page) => {
 
-    request({
+    onRequest({
       variables: {
         pagination: {
           take: perPage,
@@ -36,13 +44,13 @@ const PaginationList = props => {
     const path = `${router.pathname}?page=${page}&perPage=${perPage}`;
 
     router.push(path, path, { shallow: true });
-  }
+  };
 
   const onPerPageChange = e => {
 
     const perPage = parseInt(e.target.value, 10);
 
-    request({
+    onRequest({
       variables: {
         pagination: {
           take: perPage
@@ -53,40 +61,60 @@ const PaginationList = props => {
     const path = `${router.pathname}?page=1&perPage=${perPage}`;
 
     router.push(path, path, { shallow: true });
-  }
+  };
+
+  const onDeleteItem = id => onDelete({
+    variables: { id },
+    update: () => {
+      const isLastItemOnLastPage = count % perPage === 1 && page === pageCount;
+
+      onRequest({
+        variables: {
+          pagination: {
+            take: perPage,
+            page: isLastItemOnLastPage ? page - 1 : page
+          }
+        }
+      });
+
+      if (isLastItemOnLastPage) {
+        const path = `${router.pathname}?page=${page - 1}&perPage=${perPage}`;
+
+        router.push(path, path, { shallow: true });
+      }
+    }
+  });
 
   return (
     <>
       <List>
-        {list.map(({ id, title, description }) => (
-          <ListItem key={id} divider>
-            <ListItemText
-              primary={title}
-            />
-            <ListItemSecondaryAction>
-              <IconButton aria-label="edit">
-                <EditIcon />
-              </IconButton>
-              <IconButton aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+        {list.map(item => (
+          <PaginationListItem
+            key={item.id}
+            {...item}
+            onDelete={onDeleteItem}
+          />
         ))}
       </List>
-      <Pagination
-        count={pageCount}
-        page={page}
-        onChange={onPageChange}
-      />
-      <Select
-        defaultValue={10}
-        onChange={onPerPageChange}
-      >
-        <MenuItem value="10">10</MenuItem>
-        <MenuItem value="20">20</MenuItem>
-        <MenuItem value="50">50</MenuItem>
-      </Select>
+      <Grid container spacing={3}>
+        <Grid item xs={10}>
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={onPageChange}
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <Select
+            defaultValue={10}
+            onChange={onPerPageChange}
+          >
+            <MenuItem value="10">10</MenuItem>
+            <MenuItem value="20">20</MenuItem>
+            <MenuItem value="50">50</MenuItem>
+          </Select>
+        </Grid>
+      </Grid>
     </>
   );
 };

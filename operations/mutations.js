@@ -20,3 +20,11 @@ export const CREATE_TODO_MUTATION = gql`
         }
     }
 `;
+
+export const DELETE_TODO_MUTATION = gql`
+    mutation deleteTodo($id: Float!) {
+        deleteTodo(id: $id) {
+            message
+        }
+    }
+`;
