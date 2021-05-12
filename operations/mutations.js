@@ -28,3 +28,13 @@ export const DELETE_TODO_MUTATION = gql`
         }
     }
 `;
+
+export const UPDATE_TODO_MUTATION = gql`
+    mutation updateTodo($updateTodoInput: UpdateTodoInput!) {
+        updateTodo(updateTodoInput: $updateTodoInput) {
+            id,
+            title,
+            description
+        }
+    }
+`;

@@ -14,7 +14,7 @@ import PaginationList from "../components/PaginationList/PaginationList";
 
 // Operations
 
-import { CREATE_TODO_MUTATION, DELETE_TODO_MUTATION } from "../../operations/mutations";
+import { CREATE_TODO_MUTATION, DELETE_TODO_MUTATION, UPDATE_TODO_MUTATION } from "../../operations/mutations";
 import { GET_CURRENT_USER_TODOS } from "../../operations/queries";
 
 export const getServerSideProps = async ctx => authUtil(ctx);
@@ -42,6 +42,7 @@ function Home(props) {
   });
 
   const [deleteTodo] = useMutation(DELETE_TODO_MUTATION);
+  const [updateTodo] = useMutation(UPDATE_TODO_MUTATION);
 
   useEffect(() => {
       getTodos();
@@ -69,6 +70,7 @@ function Home(props) {
         data={data?.findAllCurrentUserTodos}
         onRequest={getTodos}
         onDelete={deleteTodo}
+        onEdit={updateTodo}
       />
     </PageLayout>
   )

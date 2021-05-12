@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 
 // Components
 
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
@@ -11,7 +11,17 @@ import Button from "@material-ui/core/Button";
 import styles from "./TodoForm.module.scss";
 
 
-const TodoForm = ({ onSubmit, loading }) => {
+const TodoForm = props => {
+
+  const {
+    onSubmit,
+    loading,
+    id,
+    title,
+    description,
+    cancelButton,
+    onCancel
+  } = props;
 
   const {
     values,
@@ -19,8 +29,9 @@ const TodoForm = ({ onSubmit, loading }) => {
     handleSubmit,
   } = useFormik({
     initialValues: {
-      title: "",
-      description: ""
+      ...(id && { id }),
+      title: title || "",
+      description: description || ""
     },
     onSubmit
   });
@@ -47,16 +58,31 @@ const TodoForm = ({ onSubmit, loading }) => {
         multiline
         rows={5}
       />
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        classes={{ root: styles.button }}
-        startIcon={loading && <CircularProgress color="secondary" size={20} />}
-        disabled={!values.title || !values.description}
-      >
-        Save
-      </Button>
+      <Grid container spacing={8}>
+        <Grid item xs={6}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            classes={{ root: styles.button }}
+            startIcon={loading && <CircularProgress color="secondary" size={20} />}
+            disabled={!values.title || !values.description}
+          >
+            Save
+          </Button>
+        </Grid>
+        {cancelButton &&
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              onClick={onCancel}
+              classes={{ root: styles.button }}
+            >
+              Cancel
+            </Button>
+          </Grid>
+        }
+      </Grid>
     </form>
   );
 };

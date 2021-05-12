@@ -20,7 +20,8 @@ const PaginationList = props => {
       count = 0
     } = {},
     onRequest,
-    onDelete
+    onDelete,
+    onEdit
   } = props;
 
   const router = useRouter();
@@ -85,6 +86,12 @@ const PaginationList = props => {
     }
   });
 
+  const onEditItem = item => onEdit({
+    variables: {
+      updateTodoInput: item
+    }
+  });
+
   return (
     <>
       <List>
@@ -93,6 +100,7 @@ const PaginationList = props => {
             key={item.id}
             {...item}
             onDelete={onDeleteItem}
+            onEdit={onEditItem}
           />
         ))}
       </List>
