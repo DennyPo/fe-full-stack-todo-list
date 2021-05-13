@@ -24,6 +24,7 @@ const PaginationListItem = props => {
     data,
     onDelete,
     onEdit,
+    onClick,
     withoutActions,
     titleKey,
     descriptionKey
@@ -39,7 +40,15 @@ const PaginationListItem = props => {
   const handleToggleForm = () => setIsEdit(prevState => !prevState);
 
   return (
-    <ListItem divider>
+    <ListItem
+      classes={({ root: onClick ? styles.item : "" })}
+      onClick={() => {
+        if (typeof onClick === "function") {
+          onClick(data);
+        }
+      }}
+      divider
+    >
       {isEdit ?
         <TodoForm
           id={data.id}

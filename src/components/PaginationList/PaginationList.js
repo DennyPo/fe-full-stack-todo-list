@@ -24,6 +24,7 @@ const PaginationList = props => {
     onRequest,
     onDelete,
     onEdit,
+    onClick,
     withoutActions
   } = props;
 
@@ -104,6 +105,7 @@ const PaginationList = props => {
             data={item}
             onDelete={onDeleteItem}
             onEdit={onEditItem}
+            onClick={onClick}
             withoutActions={withoutActions}
             titleKey={titleKey}
             descriptionKey={descriptionKey}
