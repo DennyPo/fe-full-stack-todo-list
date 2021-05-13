@@ -15,7 +15,7 @@ import PaginationList from "../components/PaginationList/PaginationList";
 // Operations
 
 import { CREATE_TODO_MUTATION, DELETE_TODO_MUTATION, UPDATE_TODO_MUTATION } from "../../operations/mutations";
-import { GET_CURRENT_USER_TODOS } from "../../operations/queries";
+import { GET_CURRENT_USER_TODOS_QUERY } from "../../operations/queries";
 
 export const getServerSideProps = async ctx => authUtil(ctx);
 
@@ -23,7 +23,7 @@ function Home(props) {
 
   const router = useRouter();
 
-  const [getTodos, { data }] = useLazyQuery(GET_CURRENT_USER_TODOS, { fetchPolicy: "network-only" });
+  const [getTodos, { data }] = useLazyQuery(GET_CURRENT_USER_TODOS_QUERY, { fetchPolicy: "network-only" });
 
   const [createTodo, { loading }] = useMutation(CREATE_TODO_MUTATION, {
     update: () => {

@@ -27,7 +27,7 @@ export const GET_NEW_ACCESS_TOKEN_QUERY = gql`
     }
 `;
 
-export const GET_CURRENT_USER_TODOS = gql`
+export const GET_CURRENT_USER_TODOS_QUERY = gql`
     query getCurrentUserTodos($pagination: Pagination) {
         findAllCurrentUserTodos(pagination: $pagination) {
             list {
@@ -36,6 +36,19 @@ export const GET_CURRENT_USER_TODOS = gql`
                 description
             },
             count
+        }
+    }
+`;
+
+export const GET_USERS_QUERY = gql`
+    query getUsers($pagination: Pagination) {
+        users(pagination: $pagination) {
+            list {
+                id,
+                name,
+                email
+            },
+           count
         }
     }
 `;

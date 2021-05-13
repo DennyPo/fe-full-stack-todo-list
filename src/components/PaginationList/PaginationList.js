@@ -19,9 +19,12 @@ const PaginationList = props => {
       list = [],
       count = 0
     } = {},
+    titleKey = "title",
+    descriptionKey = "description",
     onRequest,
     onDelete,
-    onEdit
+    onEdit,
+    withoutActions
   } = props;
 
   const router = useRouter();
@@ -98,9 +101,12 @@ const PaginationList = props => {
         {list.map(item => (
           <PaginationListItem
             key={item.id}
-            {...item}
+            data={item}
             onDelete={onDeleteItem}
             onEdit={onEditItem}
+            withoutActions={withoutActions}
+            titleKey={titleKey}
+            descriptionKey={descriptionKey}
           />
         ))}
       </List>
