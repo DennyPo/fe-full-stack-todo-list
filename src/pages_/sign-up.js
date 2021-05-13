@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Router  from "next/router";
 import { useMutation } from "@apollo/client";
 import Link from "next/link";
+import useTranslation from "next-translate/useTranslation";
 
 // components
 
@@ -41,6 +42,8 @@ export const getServerSideProps = async ctx => authUtil(ctx);
 function SignUp(props) {
 
   const [signUp, { loading, error, data }] = useMutation(SIGN_UP_MUTATION, { errorPolicy: "all" });
+
+  const { t } = useTranslation('common');
 
   const submitHandler = values => {
 
@@ -89,7 +92,7 @@ function SignUp(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          {t('signupHeading')}
         </Typography>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
@@ -101,7 +104,7 @@ function SignUp(props) {
             margin="normal"
             fullWidth
             id="email"
-            label="Email Address"
+            label={t('email')}
             name="email"
             autoComplete="email"
             autoFocus
@@ -115,7 +118,7 @@ function SignUp(props) {
             margin="normal"
             fullWidth
             id="name"
-            label="Name"
+            label={t('name')}
             name="name"
             autoComplete="name"
             autoFocus
@@ -129,7 +132,7 @@ function SignUp(props) {
             margin="normal"
             fullWidth
             name="password"
-            label="Password"
+            label={t('password')}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -142,11 +145,11 @@ function SignUp(props) {
             className={styles.submit}
             startIcon={loading && <CircularProgress color="secondary" size={20} />}
           >
-            Sign Up
+            {t('signupHeading')}
           </Button>
         </form>
         <Typography className={styles.register} component="p" variant="subtitle1">
-          If you already have an account you can <Link href="/sign-in"><a>sign in</a></Link>.
+          {t('haveAccount')} <Link href="/sign-in"><a>{t('signin')}</a></Link>.
         </Typography>
       </div>
     </Container>

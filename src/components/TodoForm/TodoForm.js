@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import useTranslation from "next-translate/useTranslation";
 
 // Components
 
@@ -23,6 +24,8 @@ const TodoForm = props => {
     onCancel
   } = props;
 
+  const { t } = useTranslation('common');
+
   const {
     values,
     handleChange,
@@ -44,7 +47,7 @@ const TodoForm = props => {
         margin="normal"
         fullWidth
         id="title"
-        label="Title"
+        label={t('title')}
         name="title"
       />
       <TextField
@@ -53,7 +56,7 @@ const TodoForm = props => {
         margin="normal"
         fullWidth
         id="description"
-        label="Description"
+        label={t('description')}
         name="description"
         multiline
         rows={5}
@@ -68,7 +71,7 @@ const TodoForm = props => {
             startIcon={loading && <CircularProgress color="secondary" size={20} />}
             disabled={!values.title || !values.description}
           >
-            Save
+            {t('save')}
           </Button>
         </Grid>
         {cancelButton &&
@@ -78,7 +81,7 @@ const TodoForm = props => {
               onClick={onCancel}
               classes={{ root: styles.button }}
             >
-              Cancel
+              {t('cancel')}
             </Button>
           </Grid>
         }

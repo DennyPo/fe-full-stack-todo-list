@@ -1,6 +1,6 @@
-import { HOME_PAGE, PROFILE_PAGE } from "./url";
+import { HOME_PAGE, USERS_PAGE } from "./url";
 import HomeIcon from '@material-ui/icons/Home';
-import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
 
 
 export const TOKEN_NAME = 'starter_token';
@@ -8,5 +8,5 @@ export const REFRESH_TOKEN_NAME = 'refresh_starter_token';
 
 export const MENU_PAGES = t => ([
   { text: t('home'), link: HOME_PAGE, Icon: HomeIcon },
-  { text: t('profile'), link: PROFILE_PAGE, Icon: PersonIcon },
+  { text: t('users'), link: USERS_PAGE, Icon: PeopleIcon },
 ]);

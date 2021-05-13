@@ -6,11 +6,11 @@ import PageLayout from "../components/PageLayout/PageLayout";
 
 export const getServerSideProps = async ctx => authUtil(ctx);
 
-function Profile(props) {
+function Users(props) {
 
   return (
       <PageLayout />
   )
 }
 
-export default Profile;
+export default Users;

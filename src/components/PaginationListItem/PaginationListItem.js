@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 
 import styles from "./PaginationListItem.module.scss";
 
@@ -21,6 +22,8 @@ const PaginationListItem = ({ id, title, description, onDelete, onEdit }) => {
 
   const [anchorEl, setAnchorEl] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
+  const { t } = useTranslation('common');
 
   const handleClosePopover = () => setAnchorEl(null);
 
@@ -71,7 +74,7 @@ const PaginationListItem = ({ id, title, description, onDelete, onEdit }) => {
               }}
               classes={{ paper: styles.popover }}
             >
-              <Typography>Are you sure want to delete todo?</Typography>
+              <Typography>{t('deleteConfirm')}</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={4}>
                   <Button
@@ -81,7 +84,7 @@ const PaginationListItem = ({ id, title, description, onDelete, onEdit }) => {
                     size="small"
                     onClick={() => onDelete(id)}
                   >
-                    Yes
+                    {t('yes')}
                   </Button>
                 </Grid>
                 <Grid item xs={4}>
@@ -91,7 +94,7 @@ const PaginationListItem = ({ id, title, description, onDelete, onEdit }) => {
                     size="small"
                     onClick={handleClosePopover}
                   >
-                    No
+                    {t('no')}
                   </Button>
                 </Grid>
               </Grid>

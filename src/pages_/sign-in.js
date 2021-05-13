@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Router  from "next/router";
 import { useLazyQuery } from "@apollo/client";
 import Link from 'next/link';
+import useTranslation from "next-translate/useTranslation";
 
 // components
 
@@ -45,6 +46,8 @@ export const getServerSideProps = async ctx => authUtil(ctx);
 function SignIn(props) {
 
   const [signIn, { loading, error, data }] = useLazyQuery(LOG_IN_QUERY);
+
+  const { t } = useTranslation('common');
 
   const submitHandler = ({ remember, ...values }) => {
 
@@ -99,7 +102,7 @@ function SignIn(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {t('signinHeading')}
         </Typography>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
@@ -111,7 +114,7 @@ function SignIn(props) {
               margin="normal"
               fullWidth
               id="email"
-              label="Email Address"
+              label={t('email')}
               name="email"
               autoComplete="email"
               autoFocus
@@ -125,7 +128,7 @@ function SignIn(props) {
               margin="normal"
               fullWidth
               name="password"
-              label="Password"
+              label={t('password')}
               type="password"
               id="password"
               autoComplete="current-password"
@@ -139,7 +142,7 @@ function SignIn(props) {
                   color="primary"
               />
             }
-            label="Remember me"
+            label={t('remember')}
           />
           <Button
               type="submit"
@@ -149,11 +152,11 @@ function SignIn(props) {
               className={styles.submit}
               startIcon={loading && <CircularProgress color="secondary" size={20} />}
           >
-            Sign In
+            {t('signinHeading')}
           </Button>
         </form>
         <Typography className={styles.register} component="p" variant="subtitle1">
-          Don`t have an account? You can <Link href="/sign-up"><a>register</a></Link>.
+          {t('dontHaveAccount')} <Link href="/sign-up"><a>{t('register')}</a></Link>.
         </Typography>
       </div>
     </Container>
