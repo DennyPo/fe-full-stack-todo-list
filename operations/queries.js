@@ -40,6 +40,19 @@ export const GET_CURRENT_USER_TODOS_QUERY = gql`
     }
 `;
 
+export const GET_USER_TODOS_QUERY = gql`
+    query getTodosByUserId($userId: Float!, $pagination: Pagination) {
+        findAllTodosByUserId(userId: $userId, pagination: $pagination) {
+            list {
+                id,
+                title,
+                description
+            },
+            count
+        }
+    }
+`;
+
 export const GET_USERS_QUERY = gql`
     query getUsers($pagination: Pagination) {
         users(pagination: $pagination) {

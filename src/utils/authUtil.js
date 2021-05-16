@@ -7,7 +7,7 @@ import { FREE_PAGES, HOME_PAGE, SIGNIN_PAGE } from "../config/url";
 import { REFRESH_TOKEN_NAME, TOKEN_NAME } from "../config/config";
 import { GET_CURRENT_USER_QUERY, GET_NEW_ACCESS_TOKEN_QUERY } from "../../operations/queries";
 
-const authUtil = async (ctx, props = {}) => {
+const authUtil = async ctx => {
   const client = initializeApollo();
   const authorization = getCookies(ctx)[TOKEN_NAME];
   const refresh = getCookies(ctx)[REFRESH_TOKEN_NAME];

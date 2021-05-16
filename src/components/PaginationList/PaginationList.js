@@ -46,7 +46,10 @@ const PaginationList = props => {
       }
     });
 
-    const path = `${router.pathname}?page=${page}&perPage=${perPage}`;
+    const path = {
+      pathname: router.pathname,
+      query: { ...router.query, page, perPage }
+    }
 
     router.push(path, path, { shallow: true });
   };
@@ -63,7 +66,10 @@ const PaginationList = props => {
       }
     });
 
-    const path = `${router.pathname}?page=1&perPage=${perPage}`;
+    const path = {
+      pathname: router.pathname,
+      query: { ...router.query, page, perPage }
+    }
 
     router.push(path, path, { shallow: true });
   };
@@ -83,7 +89,10 @@ const PaginationList = props => {
       });
 
       if (isLastItemOnLastPage) {
-        const path = `${router.pathname}?page=${page - 1}&perPage=${perPage}`;
+        const path = {
+          pathname: router.pathname,
+          query: { ...router.query, page: page - 1, perPage }
+        }
 
         router.push(path, path, { shallow: true });
       }
