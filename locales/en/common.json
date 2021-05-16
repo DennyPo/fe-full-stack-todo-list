@@ -18,5 +18,9 @@
   "signupHeading": "Sign up",
   "name": "Name",
   "haveAccount": "If you already have an account you can",
-  "signin": "sign in"
+  "signin": "sign in",
+  "yourTodos": "Your todo list",
+  "allUsers": "All users",
+  "someUserTodos": "Todo list of",
+  "emptyList": "List is empty"
 }

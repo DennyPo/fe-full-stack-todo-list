@@ -32,4 +32,4 @@ export const emailPattern = "^([a-z0-9_+-]+\\.)*[a-z0-9_+-]+@[a-z0-9_-]+(\\.[a-z
 
 export const passwordPattern = "[a-zA-Z0-9\\W]{5,}";
 
-export const namePattern = "[a-zA-Z]{2,}";
+export const namePattern = "[a-zA-Zа-яА-Я]{2,}";
