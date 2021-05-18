@@ -77,7 +77,7 @@ const PaginationList = props => {
 
     const path = {
       pathname: router.pathname,
-      query: { ...router.query, page, perPage }
+      query: { ...router.query, page: 1, perPage }
     }
 
     router.push(path, path, { shallow: true });
@@ -154,6 +154,7 @@ const PaginationList = props => {
           <Grid item xs={2}>
             <Select
               defaultValue={10}
+              value={perPage}
               onChange={onPerPageChange}
             >
               <MenuItem value="10">10</MenuItem>
