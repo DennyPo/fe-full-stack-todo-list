@@ -2,7 +2,7 @@ import { useState } from "react";
 import _ from "lodash";
 import { useRouter } from "next/router";
 import useTranslation from 'next-translate/useTranslation'
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import {
   AppBar,
@@ -34,13 +34,14 @@ import { MENU_PAGES, REFRESH_TOKEN_NAME, TOKEN_NAME } from "../../config/config"
 
 import styles from "./PageLayout.module.scss";
 
-//Queries
+// Operations
 
 import { GET_CURRENT_USER_QUERY } from "../../../operations/queries";
+import { LOGOUT_MUTATION } from "../../../operations/mutations";
 
 // Utils
 
-import { removeCookie } from "../../utils/cookiesUtils";
+import { getCookie, removeCookie } from "../../utils/cookiesUtils";
 
 
 const PageLayout = (props) => {
@@ -48,15 +49,36 @@ const PageLayout = (props) => {
   const { children } = props;
 
   const { client, data } = useQuery(GET_CURRENT_USER_QUERY);
+  const [logout] = useMutation(LOGOUT_MUTATION);
+
+
   const router = useRouter();
   const { t } = useTranslation('common');
 
   const [isSideBar, setIsSideBar] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const onToggleSideBar = () => setIsSideBar(state => !state);
+  const handleToggleSideBar = () => setIsSideBar(state => !state);
 
   const handleCloseLocales = () => setAnchorEl(null);
+
+  const handleLogout = async () => {
+    const refreshToken = getCookie(REFRESH_TOKEN_NAME);
+
+    if (refreshToken) {
+      await logout({
+        variables: {
+          refreshToken
+        }
+      });
+
+      removeCookie(REFRESH_TOKEN_NAME);
+    }
+
+    removeCookie(TOKEN_NAME);
+    router.push(SIGNIN_PAGE);
+    client.cache.reset();
+  }
 
   return (
       <>
@@ -66,7 +88,7 @@ const PageLayout = (props) => {
                 edge="start"
                 color="inherit"
                 aria-label="menu"
-                onClick={onToggleSideBar}
+                onClick={handleToggleSideBar}
             >
               <MenuIcon />
             </IconButton>
@@ -105,7 +127,7 @@ const PageLayout = (props) => {
 
         <Drawer
           open={isSideBar}
-          onClose={onToggleSideBar}
+          onClose={handleToggleSideBar}
           classes={{
             paper: styles.sidebar
           }}
@@ -124,7 +146,7 @@ const PageLayout = (props) => {
                 }}
                 onClick={() => {
                   router.push(link);
-                  onToggleSideBar();
+                  handleToggleSideBar();
                 }}
               >
                 <ListItemIcon classes={{ root: styles.listItemIcon }}>
@@ -139,13 +161,7 @@ const PageLayout = (props) => {
               classes={{
                 root: styles.listItem
               }}
-              onClick={() => {
-                removeCookie(TOKEN_NAME);
-                removeCookie(REFRESH_TOKEN_NAME);
-
-                router.push(SIGNIN_PAGE);
-                client.cache.reset();
-              }}
+              onClick={handleLogout}
           >
             <ListItemIcon classes={{ root: styles.listItemIcon }}>
               <ExitToAppIcon />

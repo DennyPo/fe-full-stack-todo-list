@@ -38,3 +38,11 @@ export const UPDATE_TODO_MUTATION = gql`
         }
     }
 `;
+
+export const LOGOUT_MUTATION = gql`
+    mutation logout($refreshToken: String!) {
+        logout(refreshToken: $refreshToken) {
+            message
+        }
+    }
+`;
