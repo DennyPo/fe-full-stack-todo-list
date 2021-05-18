@@ -1,5 +1,6 @@
 
 export const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/graphql';
+export const SERVER_API = process.env.API_URL || API;
 
 // Routes
 

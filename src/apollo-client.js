@@ -1,13 +1,13 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { useMemo } from "react";
 import { setContext } from '@apollo/client/link/context';
-import { API } from "./config/url";
+import { API, SERVER_API } from "./config/url";
 import { TOKEN_NAME } from "./config/config";
 import { getCookie } from "./utils/cookiesUtils";
 
 
 const httpLink = createHttpLink({
-  uri: API,
+  uri: typeof window === "undefined" ? SERVER_API : API,
 });
 
 const authLink = setContext((_, { headers }) => {
